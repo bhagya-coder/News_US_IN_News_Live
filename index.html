@@ -2,52 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Law & Parliament Updates</title>
+  <title>Live Law & Parliament Updates</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f5f7fa;
-      margin: 0;
-      padding: 40px;
+      padding: 30px;
     }
     h1 {
-      color: #1f2937;
+      margin-bottom: 5px;
     }
-    .card {
+    table {
+      width: 100%;
+      border-collapse: collapse;
       background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .tag {
-      display: inline-block;
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
       background: #2563eb;
       color: white;
+    }
+    tr:hover {
+      background: #f1f5f9;
+    }
+    .tag {
+      background: #e0e7ff;
+      color: #1e3a8a;
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 12px;
-      margin-right: 6px;
     }
   </style>
 </head>
+
 <body>
 
-  <h1>📜 Live Law & Parliament Updates</h1>
-  <p>Auto-updated via Power Automate</p>
+<h1>📜 Live Law & Parliament Updates</h1>
+<p>Auto-updated via Power Automate</p>
 
-  <div class="card">
-    <span class="tag">Bill</span>
-    <span class="tag">Act</span>
-    <span class="tag">Assent</span>
-    <span class="tag">Parliament</span>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Summary</th>
+      <th>PublishDate</th>
+      <th>Link</th>
+      <th>Status</th>
+      <th>Source</th>
+    </tr>
+  </thead>
+  <tbody id="lawsTable">
+    <tr>
+      <td colspan="6">Loading data…</td>
+    </tr>
+  </tbody>
+</table>
 
-    <h3>Welcome 🎉</h3>
-    <p>This site is live and ready to receive automated updates.</p>
-    <p>Next: JSON data → auto-rendered list</p>
-  </div>
+<script>
+fetch('./data/laws.json')
+  .then(response => response.json())
+  .then(data => {
+    const table = document.getElementById('lawsTable');
+    table.innerHTML = '';
+
+    data.forEach(item => {
+      const row = `
+        <tr>
+          <td>${item.title}</td>
+          <td>${item.summary}</td>
+          <td>${item.publishdate}</td>
+          <td><span class="tag">${item.link}</span></td>
+          <td>${item.status}</td>
+          <td>${item.source}</td>
+        </tr>`;
+      table.insertAdjacentHTML('beforeend', row);
+    });
+  })
+  .catch(() => {
+    document.getElementById('lawsTable').innerHTML =
+      '<tr><td colspan="6">No data available</td></tr>';
+  });
+</script>
 
 </body>
 </html>
-
